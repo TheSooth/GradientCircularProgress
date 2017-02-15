@@ -112,29 +112,29 @@ extension GradientCircularProgress {
         vc.circle(message, style: style)
     }
     
-    public func dismiss() {
-        if !isAvailable {
-            return
-        }
-        
-        if let vc = progressViewController {
-            vc.dismiss(0.6)
-        }
-        
-        cleanup(1.4, completionHandler: nil)
+    
+    public func dismiss() -> Void {
+        dismiss(0, completionHandler: nil)
     }
     
-    public func dismiss(_ completionHandler: @escaping () -> Void) -> () {
-        if !isAvailable {
-            return
-        }
-        
-        if let vc = progressViewController {
-            vc.dismiss(0.6)
-        }
-        
-        cleanup(1.4) { Void in
-            completionHandler()
+    public func dismiss(completionHandler: (() -> Void)?) -> () {
+        dismiss(0, completionHandler: completionHandler)
+    }
+    
+    
+    public func dismiss(_ delay: Double, completionHandler: (() -> Void)?) -> () {
+        if isAvailable {
+            
+            if let vc = progressViewController {
+                vc.dismiss(delay)
+            }
+            
+            cleanup(delay) { Void in
+                guard let completionHandler = completionHandler else {
+                    return
+                }
+                completionHandler()
+            }
         }
     }
     
